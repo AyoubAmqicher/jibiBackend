@@ -1,5 +1,4 @@
 package com.example.jibibackend.config;
 
-public class SecurityConfig {
-
+public class SecurityController {
 }
