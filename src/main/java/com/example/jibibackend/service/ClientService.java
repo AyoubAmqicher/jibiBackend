@@ -36,6 +36,16 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+    public Client getClientById(String clientId) {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+    }
+
+    public void updateClient(Client client) {
+        clientRepository.save(client);
+    }
+
+
     private String saveFile(MultipartFile file) throws IOException {
         String folder = "uploadsOfClients/";
         Path uploadPath = Paths.get(folder);

@@ -26,4 +26,13 @@ public class FactureService {
     public List<Facture> findUnpaidByClientIdAndOperateurId(String clientId, Long operateurId) {
         return factureRepository.findUnpaidFacturesByClientIdAndOperateurId(clientId, operateurId);
     }
+
+    public void updateFacture(Facture facture) {
+        factureRepository.save(facture);
+    }
+
+    public Facture getFactureById(Long factureId) {
+        return factureRepository.findById(factureId)
+                .orElseThrow(() -> new RuntimeException("Facture not found"));
+    }
 }
