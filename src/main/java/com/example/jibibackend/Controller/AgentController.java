@@ -2,6 +2,7 @@ package com.example.jibibackend.Controller;
 
 import com.example.jibibackend.model.Agent;
 import com.example.jibibackend.service.AgentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,8 +15,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/agents")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping
+@Slf4j
+@CrossOrigin("*")
 public class AgentController {
     @Autowired
     private AgentService agentService;

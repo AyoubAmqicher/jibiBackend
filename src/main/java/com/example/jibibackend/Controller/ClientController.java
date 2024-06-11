@@ -2,21 +2,24 @@ package com.example.jibibackend.Controller;
 
 import com.example.jibibackend.model.Client;
 import com.example.jibibackend.service.ClientService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/clients")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping
+@Slf4j
+@CrossOrigin("*")
 public class ClientController {
-
     @Autowired
     private ClientService clientService;
 
-    @PostMapping("/create")
+    @PostMapping("/createClient")
+    @PreAuthorize("hasAuthority('SCOPE_AGENT')")
     public ResponseEntity<?> createClient(@RequestParam("phone") String phone,
                                           @RequestParam("firstName") String firstName,
                                           @RequestParam("lastName") String lastName,
