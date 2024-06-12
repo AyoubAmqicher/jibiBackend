@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping
-@Slf4j
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/agents")
 public class AgentController {
     @Autowired
     private AgentService agentService;
@@ -28,12 +27,14 @@ public class AgentController {
             @RequestParam("email") String email,
             @RequestParam("phone") String phone,
             @RequestParam("cinFront") MultipartFile cinFront,
-            @RequestParam("cinBack") MultipartFile cinBack) throws IOException {
+            @RequestParam("cinBack") MultipartFile cinBack,
+            @RequestParam("agence") String agence) throws IOException {
         Agent agent = new Agent();
         agent.setLastName(lastName);
         agent.setFirstName(firstName);
         agent.setEmail(email);
         agent.setPhone(phone);
+//        agent.setAgence(agence); // Set the agence field
         //Save files
         String cinFrontPath = saveFile(cinFront);
         String cinBackPath = saveFile(cinBack);
