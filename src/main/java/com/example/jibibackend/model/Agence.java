@@ -1,5 +1,7 @@
 package com.example.jibibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,5 +28,6 @@ public class Agence {
     private String location;
 
     @OneToMany(mappedBy = "agence")
+    @JsonBackReference
     private List<Agent> agents;
 }

@@ -1,5 +1,7 @@
 package com.example.jibibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -31,5 +33,6 @@ public class Agent {
 
     @ManyToOne
     @JoinColumn(name = "agence_id")
+    @JsonManagedReference
     private Agence agence;
 }

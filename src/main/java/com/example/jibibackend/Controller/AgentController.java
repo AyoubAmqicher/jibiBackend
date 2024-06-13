@@ -1,6 +1,8 @@
 package com.example.jibibackend.Controller;
 
+import com.example.jibibackend.model.Agence;
 import com.example.jibibackend.model.Agent;
+import com.example.jibibackend.service.AgenceService;
 import com.example.jibibackend.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,10 @@ import java.util.UUID;
 public class AgentController {
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private AgenceService agenceService;
+
     @PostMapping("/create")
     public Agent createAgent(
             @RequestParam("lastName") String lastName,
@@ -28,13 +34,14 @@ public class AgentController {
             @RequestParam("phone") String phone,
             @RequestParam("cinFront") MultipartFile cinFront,
             @RequestParam("cinBack") MultipartFile cinBack,
-            @RequestParam("agence") String agence) throws IOException {
+            @RequestParam("agence") String agenceId) throws IOException {
+        Agence agence = agenceService.getAgenceById(agenceId);
         Agent agent = new Agent();
         agent.setLastName(lastName);
         agent.setFirstName(firstName);
         agent.setEmail(email);
         agent.setPhone(phone);
-//        agent.setAgence(agence); // Set the agence field
+        agent.setAgence(agence); // Set the agence field
         //Save files
         String cinFrontPath = saveFile(cinFront);
         String cinBackPath = saveFile(cinBack);
@@ -49,7 +56,7 @@ public class AgentController {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        String folder = "uploads/";
+        String folder = "src/main/resources/static/uploads/";
         Path uploadPath = Paths.get(folder);
 
         // Create the directory if it doesn't exist
@@ -58,9 +65,12 @@ public class AgentController {
         }
 
         // Save the file
-        String filePath = folder + UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String fileName =  UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String filePath = folder + fileName;
+        String fileToReturn = "uploads/" + fileName;
+
         Path path = Paths.get(filePath);
         Files.write(path, file.getBytes());
-        return filePath;
+        return fileToReturn;
     }
 }
