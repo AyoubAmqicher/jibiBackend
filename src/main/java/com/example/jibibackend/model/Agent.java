@@ -2,17 +2,20 @@ package com.example.jibibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agent {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -33,6 +36,5 @@ public class Agent {
 
     @ManyToOne
     @JoinColumn(name = "agence_id")
-    @JsonManagedReference
     private Agence agence;
 }

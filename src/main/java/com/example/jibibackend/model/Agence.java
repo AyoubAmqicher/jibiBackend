@@ -1,7 +1,9 @@
 package com.example.jibibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agence {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,6 +31,5 @@ public class Agence {
     private String location;
 
     @OneToMany(mappedBy = "agence")
-    @JsonBackReference
     private List<Agent> agents;
 }

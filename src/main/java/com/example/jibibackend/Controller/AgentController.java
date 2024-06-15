@@ -1,5 +1,6 @@
 package com.example.jibibackend.Controller;
 
+import com.example.jibibackend.dto.AgentDTO;
 import com.example.jibibackend.model.Agence;
 import com.example.jibibackend.model.Agent;
 import com.example.jibibackend.service.AgenceService;
@@ -54,6 +55,28 @@ public class AgentController {
     public List<Agent> getAllAgents() {
         return agentService.getAllAgents();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteAgentById(@PathVariable String id) {
+        agentService.deleteAgentById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public AgentDTO updateAgent(
+            @PathVariable String id,
+            @RequestBody AgentDTO updatedAgent) {
+        Agent agent = agentService.getAgentById(id);
+        agent.setLastName(updatedAgent.getLastName());
+        Agence agence = agenceService.getAgenceById(updatedAgent.getAgence());
+        agent.setFirstName(updatedAgent.getFirstName());
+        agent.setEmail(updatedAgent.getEmail());
+        agent.setPhone(updatedAgent.getPhone());
+        agent.setAgence(agence); // Set the updated agence field
+        agent = agentService.updateAgent(agent);
+        updatedAgent.setAgence(null);
+        return updatedAgent;
+    }
+
 
     private String saveFile(MultipartFile file) throws IOException {
         String folder = "src/main/resources/static/uploads/";

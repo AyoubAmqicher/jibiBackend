@@ -37,4 +37,17 @@ public class AgentService {
     public List<Agent> getAllAgents() {
         return agentRepository.findAll();
     }
+
+    public void deleteAgentById(String id) {
+        agentRepository.deleteById(id);
+    }
+
+    public Agent updateAgent(Agent agent) {
+        return agentRepository.save(agent);
+    }
+
+    public Agent getAgentById(String id) {
+        return agentRepository.findById(id).orElseThrow(() -> new RuntimeException("Agent not found"));
+    }
+
 }
