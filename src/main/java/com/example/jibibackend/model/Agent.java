@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Agent {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -36,5 +35,6 @@ public class Agent {
 
     @ManyToOne
     @JoinColumn(name = "agence_id")
+    @JsonManagedReference
     private Agence agence;
 }

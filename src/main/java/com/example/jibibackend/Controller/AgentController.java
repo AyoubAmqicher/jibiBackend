@@ -1,5 +1,6 @@
 package com.example.jibibackend.Controller;
 
+import com.example.jibibackend.auth.Roles;
 import com.example.jibibackend.dto.AgentDTO;
 import com.example.jibibackend.model.Agence;
 import com.example.jibibackend.model.Agent;
@@ -16,10 +17,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/agents")
+@RolesAllowed(Roles.ADMIN)
 public class AgentController {
     @Autowired
     private AgentService agentService;
