@@ -1,16 +1,21 @@
 package com.example.jibibackend.Controller;
 
+import com.example.jibibackend.dto.UserDTO;
+import com.example.jibibackend.model.Role;
+import com.example.jibibackend.model.User;
+import com.example.jibibackend.repository.RoleRepository;
+import com.example.jibibackend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,7 +24,6 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final JwtEncoder encoder;
-
     public AuthController(JwtEncoder encoder) {
         this.encoder = encoder;
     }

@@ -1,12 +1,16 @@
 package com.example.jibibackend.config;
 
 import com.example.jibibackend.auth.Roles;
+import com.example.jibibackend.model.User;
+import com.example.jibibackend.repository.UserRepository;
+import com.example.jibibackend.service.UserService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +19,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -32,6 +37,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +46,9 @@ public class SecurityConfiguration {
 
     private final RSAPublicKey key;
     private final RSAPrivateKey priv;
+
+    @Autowired
+    private UserService userService;
 
     public SecurityConfiguration(@Value("${jwt.public.key}") RSAPublicKey key, @Value("${jwt.private.key}") RSAPrivateKey priv) {
         this.key = key;
@@ -65,14 +74,29 @@ public class SecurityConfiguration {
     }
 
 
+//    @Bean
+//    UserDetailsService users() {
+//        return new InMemoryUserDetailsManager(
+//                User.withUsername("admin")
+//                        .password(passwordEncoder().encode("admin"))
+//                        .roles(Roles.ADMIN)
+//                        .build()
+//        );
+//    }
+
     @Bean
-    UserDetailsService users() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
-                        .password(passwordEncoder().encode("admin"))
-                        .roles(Roles.ADMIN)
-                        .build()
-        );
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return username -> {
+            User user = userService.findUserByName(username);
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found");
+            }
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList())
+            );
+        };
     }
 
     @Bean
