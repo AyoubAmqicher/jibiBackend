@@ -5,6 +5,7 @@ import com.example.jibibackend.model.Role;
 import com.example.jibibackend.model.User;
 import com.example.jibibackend.repository.RoleRepository;
 import com.example.jibibackend.repository.UserRepository;
+import com.example.jibibackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,9 @@ public class AuthController {
         this.encoder = encoder;
     }
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("")
     public String auth(Authentication authentication) {
         Instant now = Instant.now();
@@ -35,12 +39,17 @@ public class AuthController {
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+        User admin = userService.findUserByName(authentication.getName());
+        String firstName = admin.getFirstName(); // replace with actual logic to fetch first name
+        String lastName = admin.getLastName();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("firstName", firstName)
+                .claim("lastName", lastName)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
