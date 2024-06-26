@@ -37,6 +37,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -90,6 +92,12 @@ public class SecurityConfiguration {
             User user = userService.findUserByName(username);
             if (user == null) {
                 throw new UsernameNotFoundException("User not found");
+            } else if (!user.isActive()) {
+                return new org.springframework.security.core.userdetails.User(
+                        user.getUsername(),
+                        user.getPassword(),
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                );
             }
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),

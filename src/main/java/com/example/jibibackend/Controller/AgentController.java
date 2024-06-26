@@ -6,6 +6,7 @@ import com.example.jibibackend.model.Agence;
 import com.example.jibibackend.model.Agent;
 import com.example.jibibackend.service.AgenceService;
 import com.example.jibibackend.service.AgentService;
+import com.example.jibibackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,9 @@ public class AgentController {
     @Autowired
     private AgenceService agenceService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/create")
     public Agent createAgent(
             @RequestParam("lastName") String lastName,
@@ -51,7 +55,9 @@ public class AgentController {
         String cinBackPath = saveFile(cinBack);
         agent.setCinFront(cinFrontPath);
         agent.setCinBack(cinBackPath);
-        return agentService.createAgent(agent);
+        Agent createdAgent = agentService.createAgent(agent);
+        userService.createUserAgent(createdAgent);
+        return createdAgent;
     }
 
     @GetMapping("/all")
